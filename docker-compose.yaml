@@ -1,0 +1,17 @@
+version: "3"
+services:
+  app:
+   image: jenkins/jenkins:lts-alpine
+   ports:
+   - "8080:8080"
+   volumes:
+   - "./app:/var/jenkins_home"
+  benthos:
+    image: jeffail/benthos
+    volumes:
+    - "./conf/webhook.yaml:/benthos.yaml"
+    ports:
+    - "4195:4195"
+  smtp2http:
+    image: uflare/smtp2http
+    command: --listen=:25 --webhook=http://benthos:4195/ --strict=false
